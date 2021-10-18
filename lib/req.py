@@ -1,6 +1,7 @@
 import csv
 import os
 import time
+from datetime import datetime
 from collections import Counter
 
 class MyField:
@@ -73,4 +74,41 @@ def xor(lst1, lst2):
 	lst3 = [value for value in lst1+lst2 if (value not in lst1) or (value not in lst2)]
 	return lst3
 
+def diff_month(d1, d2):
+    return (d1.year - d2.year) * 12 + d1.month - d2.month
+
+def progress_report(lst):
+	a = []
+	for i in lst:
+		a.append([
+			int(i[Field.ID]),
+			int(i[Field.Progress].split('%')[0].strip()),
+			int(i[Field.ImplementationRelease].split('"')[1].split("M")[1]),
+			i[Field.LeadImplementerPartner]
+		])
+	a = sorted(a,key=lambda x: (x[2],x[1]))
+
+	MNOW = diff_month(datetime.now(), datetime(2021,4,1))
+
+	out = ""
+	steps = 20
+	for i in a:
+		prog = "["
+		for j in range(0, int(i[1]*steps/100)):
+			prog = prog + '='
+		for j in range(int(i[1]*steps/100), steps):
+			prog = prog + ' '
+		prog = prog + "]"
+
+		alert = ""
+		if i[1] < 100 and MNOW > i[2]:
+			alert = "RED ALERT"
+		elif i[1] < 100 and MNOW >= i[2]:
+			alert = "ORANGE ALERT"
+		elif i[1] < 100 and MNOW >= i[2] - 1:
+			alert = "YELLOW ALERT"
+
+		out = out + "%3d %20s %s %3d%%   M%.2d %s\n" % (i[0], i[3], prog, i[1], i[2], alert)
+
+	return out
 
