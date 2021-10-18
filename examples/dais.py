@@ -1,6 +1,9 @@
+#!/usr/bin/python3
+import sys
+sys.path.append('../lib/')
 import req
 
-file = 'Requirements-1018.csv'
+file = '../Requirements-1018.csv'
 
 allreqs = req.readall(file)
 pocreqs = req.filterstartswith(allreqs, req.Field.ProviderPoC, "PoC")
