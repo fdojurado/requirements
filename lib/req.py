@@ -1,4 +1,6 @@
 import csv
+import os
+import time
 from collections import Counter
 
 class MyField:
@@ -21,6 +23,7 @@ class MyField:
 Field =  MyField()
 
 def readall(filename):
+	print("Loading file:", filename, "(last modified:", time.ctime(os.path.getmtime(filename)) + ")")
 	tmplist = []
 	with open(filename) as csvDataFile:
 		csvReader = csv.reader(csvDataFile)

@@ -4,7 +4,7 @@ import sys
 sys.path.append('../lib/')
 import req
 
-file = '../Requirements-1018.csv'
+file = '../Requirements.csv'
 
 allreqs = req.readall(file)
 sc2reqs = req.filterby(allreqs, req.Field.ProviderSC, "SC2")
