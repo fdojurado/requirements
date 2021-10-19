@@ -23,8 +23,10 @@ class MyField:
 
 Field =  MyField()
 
+def datemodified(filename):
+	return time.ctime(os.path.getmtime(filename))
+
 def readall(filename):
-	print("Loading file:", filename, "(last modified:", time.ctime(os.path.getmtime(filename)) + ")")
 	tmplist = []
 	with open(filename) as csvDataFile:
 		csvReader = csv.reader(csvDataFile)
@@ -112,3 +114,21 @@ def progress_report(lst):
 
 	return out
 
+def generate_report(lst, title, date, prefix):
+
+	footnote = r'\footnote{Requirements downloaded from Sharepoint: ' + date + r'}'
+	MNOW = diff_month(datetime.now(), datetime(2021,4,1))
+
+	out = r'\documentclass[a4paper]{article}' + '\n'
+	out = out + r'\title{' + title + " (M%d)" % MNOW + footnote +  r'}' + '\n'
+	out = out + r'\date{}' + '\n'
+	out = out + r'\maketitle' + '\n'
+	out = out + r'\begin{document}' + '\n'
+	out = out + r'\begin{verbatim}' + '\n'
+
+	out = out + progress_report(lst)
+
+	out = out + r'\end{verbatim}' + '\n'
+	out = out + r'\end{document}'
+
+	return out
