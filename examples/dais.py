@@ -6,7 +6,9 @@ import req
 
 file = '../Requirements.csv'
 
+print("Loading file:", file, "(last modified:", req.datemodified(file) + ")")
 allreqs = req.readall(file)
+
 pocreqs = req.filterstartswith(allreqs, req.Field.ProviderPoC, "PoC")
 nopocreqs  = req.union(req.filterby(allreqs, req.Field.ProviderPoC, ""), req.filterby(allreqs, req.Field.ProviderPoC, "not yet identified"))
 

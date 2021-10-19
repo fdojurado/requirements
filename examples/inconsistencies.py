@@ -6,7 +6,9 @@ import req
 
 file = '../Requirements.csv'
 
+print("Loading file:", file, "(last modified:", req.datemodified(file) + ")")
 allreqs = req.readall(file)
+
 sc2reqs = req.filterby(allreqs, req.Field.ProviderSC, "SC2")
 poc2xreqs = req.filterstartswith(sc2reqs, req.Field.ProviderPoC, "PoC2.")
 poc2xreqs2 = req.filterstartswith(allreqs, req.Field.ProviderPoC, "PoC2.")

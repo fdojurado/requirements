@@ -6,6 +6,7 @@ import req
 
 file = '../Requirements.csv'
 
+print("Loading file:", file, "(last modified:", req.datemodified(file) + ")")
 allreqs = req.readall(file)
 sc2reqs = req.filterby(allreqs, req.Field.ProviderSC, "SC2")
 
