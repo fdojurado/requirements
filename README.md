@@ -2,13 +2,13 @@
 
 This is a collection of scripts that process requirements and generate automatic progress reports. The processor is able to read, filter, classify requirements by various fields. It is also able to generate progress reports in `pdf` format.
 
-The scripts have only been tested on MacOS.
+The scripts have only been tested on macOS.
 
 ## Requirements
 
 The scripts assume Python 3 and have been tested in Python 3.9.1.
 
-The automatic report generation require a Latex installation with [Latexmk](https://mg.readthedocs.io/latexmk.html).
+The automatic report generation requires a Latex installation with [Latexmk](https://mg.readthedocs.io/latexmk.html).
 
 ## Structure
 
