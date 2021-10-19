@@ -55,15 +55,15 @@ def readall(filename):
 def filterby(lst, field, value):
 	tmplist = []
 	for row in lst:
-			if row[field].lower() == value.lower():
-				tmplist.append(row)
+		if row[field].lower() == value.lower():
+			tmplist.append(row)
 	return tmplist	
 
 def filterstartswith(lst, field, value):
 	tmplist = []
 	for row in lst:
-			if row[field].startswith(value):
-				tmplist.append(row)
+		if row[field].startswith(value):
+			tmplist.append(row)
 	return tmplist	
 
 def countby(lst, field):
