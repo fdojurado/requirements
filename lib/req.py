@@ -8,7 +8,7 @@ from collections import Counter
 
 class MyField:
 	ID = 0
-	Shorttitle = 1
+	ShortTitle = 1
 	ProviderSC = 2
 	ProviderPoC = 3
 	Description = 4
