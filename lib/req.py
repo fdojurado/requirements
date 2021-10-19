@@ -1,6 +1,8 @@
 import csv
 import os
 import time
+import subprocess
+import glob
 from datetime import datetime
 from collections import Counter
 
@@ -120,15 +122,24 @@ def generate_report(lst, title, date, prefix):
 	MNOW = diff_month(datetime.now(), datetime(2021,4,1))
 
 	out = r'\documentclass[a4paper]{article}' + '\n'
+	out = out + r'\begin{document}' + '\n'
 	out = out + r'\title{' + title + " (M%d)" % MNOW + footnote +  r'}' + '\n'
 	out = out + r'\date{}' + '\n'
 	out = out + r'\maketitle' + '\n'
-	out = out + r'\begin{document}' + '\n'
 	out = out + r'\begin{verbatim}' + '\n'
 
 	out = out + progress_report(lst)
 
 	out = out + r'\end{verbatim}' + '\n'
 	out = out + r'\end{document}'
+
+	with open("tmp.tex", 'w') as f:
+		f.write(out)
+
+	try:
+		subprocess.call(["latexmk", "-pdf", "tmp.tex"])
+		os.rename("tmp.tex", prefix + "-M%d.pdf" % MNOW)
+	except FileNotFoundError:
+		print('latexmk not found.')
 
 	return out
