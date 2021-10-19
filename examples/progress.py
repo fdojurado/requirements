@@ -12,6 +12,8 @@ allreqs = req.readall(file)
 
 sc2reqs = req.filterby(allreqs, req.Field.ProviderSC, "SC2")
 
-prog = req.generate_report(sc2reqs, 'SC2 Progress Report', req.datemodified(file), report_prefix)
-
-print(prog)
+status, out = req.generate_report(sc2reqs, 'SC2 Progress Report', req.datemodified(file), report_prefix)
+if status == 1:
+	print(out)
+else:
+	print("report created: " + out)

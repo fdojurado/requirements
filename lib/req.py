@@ -138,8 +138,10 @@ def generate_report(lst, title, date, prefix):
 
 	try:
 		subprocess.call(["latexmk", "-pdf", "tmp.tex"])
-		os.rename("tmp.tex", prefix + "-M%d.pdf" % MNOW)
+		os.rename("tmp.pdf", prefix + "-M%d.pdf" % MNOW)
+		for fl in glob.glob("tmp.*"):
+			os.remove(fl)
 	except FileNotFoundError:
-		print('latexmk not found.')
+		return 1, 'latexmk not found.'
 
-	return out
+	return 0, prefix + "-M%d.pdf" % MNOW
