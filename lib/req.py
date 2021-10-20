@@ -168,5 +168,6 @@ def plot_counter(cn, title):
 	plt.bar(cn.keys(), cn.values(), align='center')
 	plt.grid()
 	plt.ylabel("Count")
+	plt.title(os.path.splitext(title)[0])
 	plt.xticks(rotation=90)
 	plt.savefig(title, bbox_inches='tight')
