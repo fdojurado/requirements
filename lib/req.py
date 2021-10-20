@@ -18,6 +18,7 @@ import os
 import time
 import subprocess
 import glob
+import matplotlib.pyplot as plt
 from datetime import datetime
 from collections import Counter
 
@@ -160,3 +161,12 @@ def generate_report(lst, title, date, prefix):
 		return 1, 'latexmk not found.'
 
 	return 0, prefix + "-M%d.pdf" % MNOW
+
+def plot_counter(cn, title):
+	plt.figure()
+	plt.rc('axes', axisbelow=True)
+	plt.bar(cn.keys(), cn.values(), align='center')
+	plt.grid()
+	plt.ylabel("Count")
+	plt.xticks(rotation=90)
+	plt.savefig(title, bbox_inches='tight')
