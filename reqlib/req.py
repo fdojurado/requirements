@@ -19,6 +19,7 @@ import sys
 import time
 import subprocess
 import glob
+import chardet
 import matplotlib.pyplot as plt
 from datetime import datetime
 from collections import Counter
@@ -47,7 +48,9 @@ def datemodified(filename):
 
 def readall(filename):
 	tmplist = []
-	with open(filename) as csvDataFile:
+	with open(filename, 'rb') as rawdata:
+		enc = chardet.detect(rawdata.read(10000))
+	with open(filename, encoding=enc['encoding']) as csvDataFile:
 		csvReader = csv.reader(csvDataFile)
 		next(csvReader)
 		for row in csvReader:
