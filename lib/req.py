@@ -15,6 +15,7 @@
 
 import csv
 import os
+import sys
 import time
 import subprocess
 import glob
@@ -158,9 +159,10 @@ def generate_report(lst, title, date, prefix):
 		for fl in glob.glob("tmp.*"):
 			os.remove(fl)
 	except FileNotFoundError:
-		return 1, 'latexmk not found.'
+		sys.stderr.write("error: latexmk not found.\n")
+		sys.exit(1)
 
-	return 0, prefix + "-M%d.pdf" % MNOW
+	return prefix + "-M%d.pdf" % MNOW
 
 def plot_counter(cn, title):
 	plt.figure()
