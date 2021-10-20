@@ -15,11 +15,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import sys
-sys.path.append('../lib/')
-import req
+from reqlib import req
 
-file = '../Requirements.csv'
+file = 'Requirements.csv'
 
 print("Loading file:", file, "(last modified:", req.datemodified(file) + ")")
 allreqs = req.readall(file)

@@ -15,26 +15,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import sys
-sys.path.append('../lib/')
-import req
+from reqlib import req
 
-file = '../Requirements.csv'
+file = 'Requirements.csv'
+report_prefix = "SC2-Report"
 
 print("Loading file:", file, "(last modified:", req.datemodified(file) + ")")
 allreqs = req.readall(file)
+
 sc2reqs = req.filterby(allreqs, req.Field.ProviderSC, "SC2")
 
-count = req.countby(sc2reqs, req.Field.Status)
-req.plot_counter(count, "SC2-Req-Status.pdf")
-print("SC2 Reqs Status:", count)
-print()
-
-count = req.countby(sc2reqs, req.Field.ProviderPoC)
-req.plot_counter(count, "SC2-Req-Provider.pdf")
-print("SC2 Reqs by Provider PoC:", count)
-print()
-
-count = req.countby(sc2reqs, req.Field.LeadImplementerPartner)
-req.plot_counter(count, "SC2-Req-Lead.pdf")
-print("SC2 Contributors:", count)
+filename = req.generate_report(sc2reqs, 'SC2 Progress Report', req.datemodified(file), report_prefix)
+print("report created: " + filename)
