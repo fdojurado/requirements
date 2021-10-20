@@ -12,8 +12,8 @@ The automatic report generation requires a Latex installation with [Latexmk](htt
 
 ## Structure
 
-* `lib/req.py` requirement processor library
-* `examples/` various usage examples
+* `reqlib/req.py` requirement processor library
+* `*.py` various usage examples
 
 ## Usage
 
@@ -25,7 +25,7 @@ Functions `printfield()` and `countby()` print fields and classify the requireme
 
 Finally, function `generate_report()` automatically generates progress reports in `pdf` format ordered by deadline and with progress bars for each individual requirement. It also marks unfinished requirements with a yellow, orange and red alert when the implementation deadline approaches.
 
-See `examples/` for various usage examples.
+See `.py` scripts in root directory for various usage examples.
 
 ## Contributions
 
