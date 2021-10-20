@@ -31,7 +31,9 @@ print("All Reqs (Total):", len(allreqs))
 print("Reqs in PoC (Total):", len(pocreqs))
 print("Reqs not in PoC (Total):", len(nopocreqs))
 
-print("All Reqs by Provider SC:", req.countby(allreqs, req.Field.ProviderSC))
+count = req.countby(allreqs, req.Field.ProviderSC)
+req.plot_counter(count, "DAIS-All-Reqs.pdf")
+print("All Reqs by Provider SC:", count)
 print()
 
 print("Reqs in PoC:", req.countby(pocreqs, req.Field.ProviderPoC))

@@ -26,15 +26,15 @@ allreqs = req.readall(file)
 sc2reqs = req.filterby(allreqs, req.Field.ProviderSC, "SC2")
 
 count = req.countby(sc2reqs, req.Field.Status)
+req.plot_counter(count, "SC2-Req-Status.pdf")
 print("SC2 Reqs Status:", count)
 print()
-req.plot_counter(count, "SC2-Req-Status.pdf")
 
 count = req.countby(sc2reqs, req.Field.ProviderPoC)
+req.plot_counter(count, "SC2-Req-Provider.pdf")
 print("SC2 Reqs by Provider PoC:", count)
 print()
-req.plot_counter(count, "SC2-Req-Provider.pdf")
 
 count = req.countby(sc2reqs, req.Field.LeadImplementerPartner)
-print("SC2 Contributors:", count)
 req.plot_counter(count, "SC2-Req-Lead.pdf")
+print("SC2 Contributors:", count)
