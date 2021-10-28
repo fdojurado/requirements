@@ -20,6 +20,7 @@ import time
 import subprocess
 import glob
 import chardet
+import re
 import matplotlib.pyplot as plt
 from datetime import datetime
 from collections import Counter
@@ -176,3 +177,9 @@ def plot_counter(cn, title):
 	plt.title(os.path.splitext(title)[0])
 	plt.xticks(rotation=90)
 	plt.savefig(title, bbox_inches='tight')
+
+def find_emails(lst):
+	emails = []
+	for i in lst:
+		emails = emails + re.findall("([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)", i)
+	return list(set([x.lower() for x in emails]))
