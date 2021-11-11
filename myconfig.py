@@ -15,15 +15,18 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from reqlib import req
-import myconfig as cfg
+# Data files
+reqfile = 'Requirements.csv'
+contactsfile = "DAIS contacts and email lists 2021-10-28.xlsx"
+altnamesfile = 'dais-altnames.xlsx'
 
-report_prefix = "SC2-Report"
+# SMTP Server 
+SMTP_SERVER = 'mail.dtu.dk'
+SMTP_PORT = 587
+SMTP_USERNAME = 'xefa@dtu.dk'
 
-print("Loading file:", cfg.reqfile, "(last modified:", req.datemodified(cfg.reqfile) + ")")
-allreqs = req.readall(cfg.reqfile)
+# FROM email address
+FROM = 'xefa@dtu.dk'
 
-sc2reqs = req.filterby(allreqs, req.Field.ProviderSC, "SC2")
-
-filename = req.generate_report(sc2reqs, 'SC2 Progress Report', req.datemodified(cfg.reqfile), report_prefix)
-print("report created: " + filename)
+# Name in email signature
+NAME = 'Xenofon (Fontas) Fafoutis'

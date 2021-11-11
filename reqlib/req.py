@@ -24,23 +24,26 @@ import re
 import matplotlib.pyplot as plt
 from datetime import datetime
 from collections import Counter
+from reqlib import contact as ct
+import pandas as pd
 
 class MyField:
-	ID = 0
-	ShortTitle = 1
-	ProviderSC = 2
-	ProviderPoC = 3
-	Description = 4
-	Rationale = 5
-	ConsumerSC = 6
-	ConsumerPoCDemo = 7
-	ImplementationRelease = 8
-	LeadImplementerContact = 9
-	LeadImplementerPartner = 10
-	Status = 11
-	Progress = 12
-	ProposedPartner = 13
-	Comments = 14
+	ID = 'ID'
+	ShortTitle = 'Short title'
+	ProviderSC = 'Provider SC'
+	ProviderPoC = 'Provider PoC'
+	Description = 'Description'
+	Rationale = 'Rationale'
+	ConsumerSC = 'Consumer(s) SC'
+	ConsumerPoCDemo = 'Consumer(s) PoC/Demo'
+	ImplementationRelease = 'Implementation Release'
+	LeadImplementerContact = 'Lead implementer contact'
+	LeadImplementerPartner = 'Lead implementer partner'
+	Status = 'Status'
+	Progress = 'Progress (%)'
+	ProposedPartner = 'Proposed partner(s)'
+	Comments = 'Comments'
+	Headers = []
 
 Field =  MyField()
 
@@ -53,12 +56,13 @@ def readall(filename):
 		enc = chardet.detect(rawdata.read(10000))
 	with open(filename, encoding=enc['encoding']) as csvDataFile:
 		csvReader = csv.reader(csvDataFile)
-		next(csvReader)
+		Field.Headers = next(csvReader)
 		for row in csvReader:
 			tmplist.append(row)
 	return tmplist
 
 def filterby(lst, field, value):
+	field = Field.Headers.index(field)
 	tmplist = []
 	for row in lst:
 		if row[field].lower() == value.lower():
@@ -66,6 +70,7 @@ def filterby(lst, field, value):
 	return tmplist	
 
 def filterstartswith(lst, field, value):
+	field = Field.Headers.index(field)
 	tmplist = []
 	for row in lst:
 		if row[field].startswith(value):
@@ -73,6 +78,7 @@ def filterstartswith(lst, field, value):
 	return tmplist	
 
 def countby(lst, field):
+	field = Field.Headers.index(field)
 	if len(lst) == 0:
 		return None
 	group = []
@@ -81,7 +87,51 @@ def countby(lst, field):
 		cn = Counter(group)
 	return dict(cn.most_common())
 
+def filterbylist(lst, field, value):
+	field = Field.Headers.index(field)
+	tmplist = []
+	for row in lst:
+		raw = row[field].lower()
+		rawsplit = raw.split('"')
+		while ',' in rawsplit: rawsplit.remove(',')
+		while '[' in rawsplit: rawsplit.remove('[')
+		while ']' in rawsplit: rawsplit.remove(']')
+		if value.lower() in rawsplit:
+			tmplist.append(row)
+	return tmplist
+
+def filterstartswithlist(lst, field, value):
+	field = Field.Headers.index(field)
+	tmplist = []
+	for row in lst:
+		raw = row[field].lower()
+		rawsplit = raw.split('"')
+		while ',' in rawsplit: rawsplit.remove(',')
+		while '[' in rawsplit: rawsplit.remove('[')
+		while ']' in rawsplit: rawsplit.remove(']')
+		for ri in rawsplit:
+			if ri.startswith(value.lower()):
+				tmplist.append(row)
+				break
+	return tmplist
+
+def countbylist(lst, field):
+	field = Field.Headers.index(field)
+	if len(lst) == 0:
+		return None
+	group = []
+	for item in lst:
+		raw = item[field].lower()
+		rawsplit = raw.split('"')
+		while ',' in rawsplit: rawsplit.remove(',')
+		while '[' in rawsplit: rawsplit.remove('[')
+		while ']' in rawsplit: rawsplit.remove(']')
+		group = group + rawsplit
+		cn = Counter(group)
+	return dict(cn.most_common())
+
 def printfield(lst, field):
+	field = Field.Headers.index(field)
 	tmp = []
 	for item in lst:
 		tmp.append(item[field])
@@ -105,12 +155,19 @@ def diff_month(d1, d2):
 def progress_report(lst):
 	a = []
 	for i in lst:
-		a.append([
-			int(i[Field.ID]),
-			int(i[Field.Progress].split('%')[0].strip()),
-			int(i[Field.ImplementationRelease].split('"')[1].split("M")[1]),
-			i[Field.LeadImplementerPartner]
-		])
+		raw = i[Field.Headers.index(Field.ImplementationRelease)]
+		raw = raw.replace('M', '')
+		rawsplit = raw.split('"')
+		while ',' in rawsplit: rawsplit.remove(',')
+		while '[' in rawsplit: rawsplit.remove('[')
+		while ']' in rawsplit: rawsplit.remove(']')
+		for d in rawsplit:
+			a.append([
+				int(i[Field.Headers.index(Field.ID)]),
+				int(i[Field.Headers.index(Field.Progress)].split('%')[0].strip()),
+				int(d),
+				i[Field.Headers.index(Field.LeadImplementerPartner)].strip()
+			])
 	a = sorted(a,key=lambda x: (x[2],x[1]))
 
 	MNOW = diff_month(datetime.now(), datetime(2021,4,1))
@@ -178,8 +235,13 @@ def plot_counter(cn, title):
 	plt.xticks(rotation=90)
 	plt.savefig(title, bbox_inches='tight')
 
-def find_emails(lst):
+def find_emails(lst, contactdf, altnamesdf, flt=''):
 	emails = []
 	for i in lst:
-		emails = emails + re.findall("([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)", i)
+		contact = re.findall("([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)", i[Field.Headers.index(Field.LeadImplementerContact)])
+		if contact != []:
+			emails = emails + contact
+		elif isinstance(contactdf, pd.DataFrame):
+			altnames = ct.getaltnames(altnamesdf, i[Field.Headers.index(Field.LeadImplementerPartner)])
+			emails = emails + ct.getemails(contactdf, altnames, flt)
 	return list(set([x.lower() for x in emails]))

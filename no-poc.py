@@ -16,11 +16,10 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from reqlib import req
+import myconfig as cfg
 
-file = 'Requirements.csv'
-
-print("Loading file:", file, "(last modified:", req.datemodified(file) + ")")
-allreqs = req.readall(file)
+print("Loading file:", cfg.reqfile, "(last modified:", req.datemodified(cfg.reqfile) + ")")
+allreqs = req.readall(cfg.reqfile)
 
 reqsc1 = req.filterby(allreqs, req.Field.ConsumerPoCDemo, "")
 reqsc2 = req.filterby(allreqs, req.Field.ConsumerPoCDemo, "not yet identified")
@@ -33,5 +32,3 @@ reqsp = req.union(reqsp1, reqsp2)
 reqs = req.intersection(reqsc, reqsp)
 
 req.plot_counter(req.countby(reqs, req.Field.ProviderSC), "No-Consumer-Producer-PoC.pdf")
-
-

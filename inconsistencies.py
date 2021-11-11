@@ -16,11 +16,10 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
  
 from reqlib import req
+import myconfig as cfg
 
-file = 'Requirements.csv'
-
-print("Loading file:", file, "(last modified:", req.datemodified(file) + ")")
-allreqs = req.readall(file)
+print("Loading file:", cfg.reqfile, "(last modified:", req.datemodified(cfg.reqfile) + ")")
+allreqs = req.readall(cfg.reqfile)
 
 sc2reqs = req.filterby(allreqs, req.Field.ProviderSC, "SC2")
 poc2xreqs = req.filterstartswith(sc2reqs, req.Field.ProviderPoC, "PoC2.")
@@ -29,3 +28,12 @@ inconsistentreqs = req.xor(poc2xreqs, poc2xreqs2)
 
 print("Total PoC2.x Reqs:", req.countby(poc2xreqs2, req.Field.ProviderSC))
 print("ID of PoC2.x Reqs not in SC2:", req.printfield(inconsistentreqs, req.Field.ID))
+
+nopoc = req.union(
+	req.filterby(sc2reqs, req.Field.ProviderPoC, "not yet identified"),
+	req.filterby(sc2reqs, req.Field.ProviderPoC, "")
+)
+rq = req.xor(sc2reqs, poc2xreqs)
+rq = req.xor(rq, nopoc)
+print("SC2 Reqs not in PoC2.x:", req.countby(rq, req.Field.ProviderPoC))
+print("ID of SC2 Reqs not in PoC2.x:", req.printfield(rq, req.Field.ID))

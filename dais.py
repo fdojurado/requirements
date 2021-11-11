@@ -16,11 +16,10 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from reqlib import req
+import myconfig as cfg
 
-file = 'Requirements.csv'
-
-print("Loading file:", file, "(last modified:", req.datemodified(file) + ")")
-allreqs = req.readall(file)
+print("Loading file:", cfg.reqfile, "(last modified:", req.datemodified(cfg.reqfile) + ")")
+allreqs = req.readall(cfg.reqfile)
 
 pocreqs = req.filterstartswith(allreqs, req.Field.ProviderPoC, "PoC")
 nopocreqs  = req.union(req.filterby(allreqs, req.Field.ProviderPoC, ""), req.filterby(allreqs, req.Field.ProviderPoC, "not yet identified"))

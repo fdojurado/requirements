@@ -16,11 +16,10 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from reqlib import req
+import myconfig as cfg
 
-file = 'Requirements.csv'
-
-print("Loading file:", file, "(last modified:", req.datemodified(file) + ")")
-allreqs = req.readall(file)
+print("Loading file:", cfg.reqfile, "(last modified:", req.datemodified(cfg.reqfile) + ")")
+allreqs = req.readall(cfg.reqfile)
 sc2reqs = req.filterby(allreqs, req.Field.ProviderSC, "SC2")
 
 count = req.countby(sc2reqs, req.Field.Status)
@@ -36,3 +35,8 @@ print()
 count = req.countby(sc2reqs, req.Field.LeadImplementerPartner)
 req.plot_counter(count, "SC2-Req-Lead.pdf")
 print("SC2 Contributors:", count)
+print()
+
+count = req.countbylist(sc2reqs, req.Field.ConsumerPoCDemo)
+req.plot_counter(count, "SC2-Req-Consumer.pdf")
+print("SC2 Reqs by Consumer PoC or Demo:", count)
