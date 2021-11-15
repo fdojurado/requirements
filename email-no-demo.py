@@ -28,7 +28,7 @@ allreqs = req.readall(cfg.reqfile)
 sc2reqs = req.filterby(allreqs, req.Field.ProviderSC, "SC2")
 
 reqsc1 = req.filterby(sc2reqs, req.Field.ConsumerPoCDemo, "")
-reqsc2 = req.filterby(sc2reqs, req.Field.ConsumerPoCDemo, "not yet identified")
+reqsc2 = req.filterbylist(sc2reqs, req.Field.ConsumerPoCDemo, "not yet identified")
 reqsc = req.union(reqsc1, reqsc2)
 
 withdemo = req.filterstartswithlist(sc2reqs, req.Field.ConsumerPoCDemo, "Demo")
@@ -44,15 +44,15 @@ SUBJECT = "[DAIS-SC2] Requirements without consumer demo"
 MESSAGE = """Dear DAIS lead implementers,
 
 This is a kind reminder that the status of some of your requirements do not have a consumer demonstrator.
-Each requirement shall be preferably consumed by a demostrator (but can also be consumed by a PoC only exceptionally).
+Each requirement shall be preferably consumed by a demostrator (but can also be consumed by a PoC only).
 
-If your requirements do not have a Consumer PoC or Demonstrator, please identify one and add it to the 'Consumer(s) PoC/Demo' field.
-
-If your requirements have a Consumer PoC, please identify the most suitable demonstrator and add it to the 'Consumer(s) PoC/Demo' field. The field can have multiple values, so no need to remove the Consumer PoC.
-
-The requirements with no consumer demonstrator are: %s
+If your requirements has neither a Consumer PoC nor a Consumer Demonstrator, please identify one and add it to the 'Consumer(s) PoC/Demo' field. The requirements with neither a Consumer Demonstrator nor a Consumer PoC are marked as 'Rejected by the SC leader" and will be removed from the requirements list unless you address this issue.
 
 The requirements with neither consumer demonstrator nor PoC are: %s
+
+If your requirements have a Consumer PoC, please try to identify the most suitable demonstrator and add it to the 'Consumer(s) PoC/Demo' field. The field can have multiple values, so no need to remove the Consumer PoC. WP1 has decided to accept requirements with only a Consumer PoC although this is not ideal. If you have a consumer PoC but cannot find a suitable demonstrator, you can leave it as it is.
+
+The requirements with no consumer demonstrator are: %s
 
 Thanks in advance for addressing this issue.
 
@@ -61,7 +61,7 @@ If you have updated your requirements after that time, please ignore this email.
 
 Cheers,
 %s
-""" % (req.printfield(nodemo, req.Field.ID), req.printfield(reqsc, req.Field.ID), DATE, cfg.NAME)
+""" % (req.printfield(reqsc, req.Field.ID), req.printfield(nodemo, req.Field.ID), DATE, cfg.NAME)
 
 spam.smtpconf(cfg.SMTP_SERVER, cfg.SMTP_PORT, cfg.SMTP_USERNAME)
 spam.email(cfg.FROM, TO, SUBJECT, MESSAGE, DATE)

@@ -66,7 +66,7 @@ See `partner-emails.py` in root directory for an example.
 
 You can extract emails from a list of requirements by using the `find_emails()` function in `reqlib/req.py`.
 
-Unfortunately, some emails have typos. The function `fixemails()` in `reqlib/contact.py` can fix most of those typos by looking for the closes match in the contacts file.
+Unfortunately, some emails have typos. The function `fixemails()` in `reqlib/contact.py` can fix most of those typos by looking for the closest match in the contacts file.
 
 You can then send a reminder email to those recipients by specifying the subject and body of the email.
 
