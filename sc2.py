@@ -17,8 +17,10 @@
 
 from reqlib import req
 import myconfig as cfg
+import re
 
-print("Loading file:", cfg.reqfile, "(last modified:", req.datemodified(cfg.reqfile) + ")")
+print("Loading file:", cfg.reqfile,
+      "(last modified:", req.datemodified(cfg.reqfile) + ")")
 allreqs = req.readall(cfg.reqfile)
 sc2reqs = req.filterby(allreqs, req.Field.ProviderSC, "SC2")
 
@@ -40,3 +42,9 @@ print()
 count = req.countbylist(sc2reqs, req.Field.ConsumerPoCDemo)
 req.plot_counter(count, "SC2-Req-Consumer.pdf")
 print("SC2 Reqs by Consumer PoC or Demo:", count)
+
+count = req.countbylist(sc2reqs, req.Field.Progress)
+count = {int(re.sub(r' [%]$', '', k)): v for (k, v) in count.items()}
+sorted_items = dict(sorted(count.items()))
+req.plot_counter(sorted_items, "SC2-Req-progress.pdf", 'Progress (%)')
+print("SC2 Reqs progress:", count)

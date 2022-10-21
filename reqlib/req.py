@@ -225,13 +225,15 @@ def generate_report(lst, title, date, prefix):
 
 	return prefix + "-M%d.pdf" % MNOW
 
-def plot_counter(cn, title):
+def plot_counter(cn, title, x_label=None):
 	plt.figure()
 	plt.rc('axes', axisbelow=True)
 	plt.bar(cn.keys(), cn.values(), align='center')
 	plt.grid()
 	plt.ylabel("Count")
 	plt.title(os.path.splitext(title)[0])
+	if x_label is not None:
+		plt.xlabel(x_label)
 	plt.xticks(rotation=90)
 	plt.savefig(title, bbox_inches='tight')
 
